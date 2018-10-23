@@ -1,7 +1,8 @@
 open Lwt.Infix
 
+let public_host = "52.19.203.87"
+
 let server_uri host = Uri.make ~scheme:"http" ~host ~port:14561 ()
-let public_host = server_uri "52.19.203.87"
 
 let get_call host path of_yojson : ('a, string) Result.result Lwt.t= 
   let map_endpoint = Uri.with_uri ~path host in
@@ -15,8 +16,8 @@ let get_call host path of_yojson : ('a, string) Result.result Lwt.t=
     >|= Yojson.Safe.from_string >|= of_yojson 
     >>= Types.yojson_error_to_lwt_error
 
-module Client(H: sig val host: Uri.t end) = struct
-  let host = H.host
+module Client(H: sig val host: string end) = struct
+  let host = server_uri H.host
 
   let get_map () =
     let path = Some "game/v1/map" in
