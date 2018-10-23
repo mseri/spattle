@@ -16,15 +16,15 @@ let get_call host path of_yojson : ('a, string) Result.result Lwt.t=
     >>= Types.yojson_error_to_lwt_error
 
 module Client(H: sig val host: Uri.t end) = struct
-let host = H.host
+  let host = H.host
 
-let get_map () =
-  let path = Some "game/v1/map" in
-  let of_yojson = Types.map_of_yojson in
-  get_call host path of_yojson
+  let get_map () =
+    let path = Some "game/v1/map" in
+    let of_yojson = Types.map_of_yojson in
+    get_call host path of_yojson
 
-let get_params () =
-  let path = Some "game/v1/parameters" in
-  let of_yojson = Types.game_params_of_yojson in
-  get_call host path of_yojson
+  let get_params () =
+    let path = Some "game/v1/parameters" in
+    let of_yojson = Types.game_params_of_yojson in
+    get_call host path of_yojson
 end
