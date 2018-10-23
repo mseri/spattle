@@ -1,0 +1,6 @@
+(library
+ (name spattle)
+ (public_name spattle)
+ (flags (:standard -w -39))
+ (libraries cohttp-lwt-unix lwt ppx_deriving_yojson.runtime uri yojson)
+ (preprocess (pps ppx_deriving_yojson)))
