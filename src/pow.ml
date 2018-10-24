@@ -1,5 +1,6 @@
+let alphabet = Array.init 26 (fun i -> char_of_int (97+i))
+
 let find_hash input difficulty =
-  let alphabet = Array.init 26 (fun i -> char_of_int (97+i)) in
   let make_string n =
     let buf = Buffer.create 7 in
     let rec go n =
