@@ -13,8 +13,7 @@ let find_hash input difficulty =
   (* 40 == len SHA1 hex hash *)
   let check_tail n hash =
     let rec go acc k =
-      if k = 0 then acc
-      else if not acc then acc
+      if not acc || k = 0 then acc
       else go (String.unsafe_get hash (40-k) = '0') (k-1)
     in
       (* We need to find exactly n zeroes *)
