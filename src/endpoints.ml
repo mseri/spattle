@@ -43,7 +43,10 @@ let find_hash Types.{input; difficulty} =
       if k = 0 then acc
       else if not acc then acc
       else go (String.unsafe_get hash (40-k) = '0') (k-1)
-    in go true n
+    in
+      (* We need to find exactly n zeroes *)
+      String.unsafe_get hash (40-n-1) != '0'
+      && go true n
   in
   let test suffix =
     Digestif.SHA1.digestv_string [input; suffix]
