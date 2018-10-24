@@ -40,9 +40,9 @@ let find_hash Types.{input; difficulty} =
   (* 40 == len SHA1 hex hash *)
   let check_tail n hash =
     let rec go acc k =
-      if n==0 then acc
+      if k = 0 then acc
       else if not acc then acc
-      else go (String.unsafe_get hash (40-k) == '0') (k-1)
+      else go (String.unsafe_get hash (40-k) = '0') (k-1)
     in go true n
   in
   let test suffix =
