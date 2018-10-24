@@ -130,19 +130,25 @@ type ship = {
 } [@@deriving yojson]
 
 type typed_ship = Capital of ship | Cruiser of ship | Carrier of ship
-exception InvalidShip of string
 
 let to_typed_ship s =
   match s.nomenclature with
-  | "capitalShip"   -> Capital s
-  | "battleCruiser" -> Cruiser s
-  | "energyCarrier" -> Carrier s
-  | _ -> raise (InvalidShip s.nomenclature)
+  | "capitalShip"   -> Ok (Capital s)
+  | "battleCruiser" -> Ok (Cruiser s)
+  | "energyCarrier" -> Ok (Carrier s)
+  | _ -> Error ("InvalidShip: " ^ s.nomenclature)
 
-let of_typed_ship = function
+let from_typed_ship = function
   | Capital s -> s
   | Cruiser s -> s
   | Carrier s -> s
+
+let typed_ship_of_yojson v =
+  let open Ppx_deriving_yojson_runtime in
+  v |> ship_of_yojson >>= to_typed_ship
+
+let typed_ship_to_yojson v =
+  v |> from_typed_ship |> ship_to_yojson
 
 (*
 FleetReport
@@ -193,7 +199,7 @@ WarningLogItemWormholeBomb
 
 type capital_ship_top_up_challenge = {
   input: string;
-  difficulty: string;
+  difficulty: int;
 } [@@deriving yojson]
 
 type space_probe_result_item = {
@@ -232,9 +238,9 @@ type fleet_report = {
   username: string;
   capitalEnergyTopUpChallenge: capital_ship_top_up_challenge;
   gameScore: float;
-  ships: ship list;
+  ships: typed_ship list;
   mapExploration: string list; (** list of map_point.label *)
-  spaceProbeResults: (string * space_probe_result) list; (** map of UUID, result *)
+  spaceProbeResults: Yojson.Safe.json;
   logWarnings: warning_log_item list;
 } [@@deriving yojson]
 
