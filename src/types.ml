@@ -2,6 +2,16 @@ let yojson_error_to_lwt_error = function
   | Error s -> Lwt_result.fail s
   | Ok m -> Lwt_result.ok (Lwt.return m)
 
+let response_to_content ~objectKey ~of_yojson resp =
+  let open Yojson.Safe.Util in
+  let status = resp |> member "status" |> to_int in
+  if status != 200 then
+    let error = resp |> member "error" |> to_string in
+    let message = resp |> member "message" |> to_string in
+    Error (error^": "^message)
+  else
+    resp |> member objectKey |> of_yojson
+
 (*
 {
   "mapSize": 1000,
