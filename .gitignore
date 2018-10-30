@@ -2,3 +2,4 @@ _build
 *.install
 .merlin
 .config
+demo.ml
