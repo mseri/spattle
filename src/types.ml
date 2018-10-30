@@ -262,14 +262,14 @@ AttackerBombDamageReportItem
 {
 	"username"     : USERNAME
 	"nomenclature" : SHIP-NOMENCLATURE
-	"destroyed"    : Boolean
+	"alive"    : Boolean
 }
 *)
 
 type attacker_bomb_damage_report_item = {
   username: string;
   nomenclature: string; (** one of the nomenclatures *)
-  destroyed: bool;
+  alive: bool;
 } [@@deriving yojson]
 
 type attacker_bomb_damage_report =
