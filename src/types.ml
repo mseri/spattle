@@ -46,7 +46,7 @@ let response_to_content ~objectKey ~of_yojson resp =
 endpoint: game/v1/parameters
 *)
 
-type 'a sheeps_stats = {
+type 'a ships_stats = {
   capitalShip: 'a;
   battleCruiser: 'a;
   energyCarrier: 'a;
@@ -63,10 +63,10 @@ type game_params = {
   fleetBattleCruiserBombBuildingCost: int;
   fleetBattleCruiserBombNominalEnergy: int;
   fleetEnergyCarrierBuildEnergyCost: int;
-  fleetShipNomenclature2JumpCostCoefficient: float sheeps_stats;
-  fleetShipsMaxEnergy: int sheeps_stats;
+  fleetShipNomenclature2JumpCostCoefficient: float ships_stats;
+  fleetShipsMaxEnergy: int ships_stats;
   bombsEffectMultiplier: int;
-  scoringPointsForKillPerNomenclature: int sheeps_stats;
+  scoringPointsForKillPerNomenclature: int ships_stats;
   serverThrottlingPausingPeriodInSeconds: float;
 } [@@deriving yojson]
 
@@ -139,19 +139,19 @@ type ship = {
   alive: bool;
 } [@@deriving yojson]
 
-type typed_ship = Capital of ship | Cruiser of ship | Carrier of ship
+type typed_ship = [`Capital of ship | `Cruiser of ship | `Carrier of ship]
 
 let to_typed_ship s =
   match s.nomenclature with
-  | "capitalShip"   -> Ok (Capital s)
-  | "battleCruiser" -> Ok (Cruiser s)
-  | "energyCarrier" -> Ok (Carrier s)
+  | "capitalShip"   -> Ok (`Capital s)
+  | "battleCruiser" -> Ok (`Cruiser s)
+  | "energyCarrier" -> Ok (`Carrier s)
   | _ -> Error ("InvalidShip: " ^ s.nomenclature)
 
 let from_typed_ship = function
-  | Capital s -> s
-  | Cruiser s -> s
-  | Carrier s -> s
+  | `Capital s -> s
+  | `Cruiser s -> s
+  | `Carrier s -> s
 
 let typed_ship_of_yojson v =
   let open Ppx_deriving_yojson_runtime in
